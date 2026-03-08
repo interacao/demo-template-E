@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{NOME}} — {{SEGMENTO}} em {{CIDADE}}</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cor1: {{COR_PRIMARIA}};
+    --cor2: {{COR_SECUNDARIA}};
+    --bg: #f9f9f7;
+    --bg2: #f0eeeb;
+    --texto: #0e0e0c;
+    --suave: #888880;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { font-family:'Outfit',sans-serif; background:var(--bg); color:var(--texto); overflow-x:hidden; }
+
+  /* NAV */
+  nav {
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:24px 64px;
+    background:rgba(249,249,247,0.9); backdrop-filter:blur(16px);
+    border-bottom:1px solid rgba(0,0,0,0.06); transition:all 0.3s;
+  }
+  nav.scrolled { padding:16px 64px; box-shadow:0 2px 20px rgba(0,0,0,0.06); }
+  .nav-logo {
+    font-family:'Syne',sans-serif; font-size:17px; font-weight:800;
+    color:var(--cor1); text-decoration:none; letter-spacing:-0.5px;
+  }
+  .nav-links { display:flex; gap:36px; list-style:none; align-items:center; }
+  .nav-links a { font-size:14px; font-weight:500; color:var(--suave); text-decoration:none; transition:color 0.2s; }
+  .nav-links a:hover { color:var(--cor1); }
+  .nav-cta {
+    background:var(--cor1); color:#fff !important;
+    padding:10px 22px; border-radius:100px;
+    font-weight:600 !important;
+  }
+  .nav-cta:hover { background:var(--cor2) !important; }
+
+  /* HERO */
+  #hero {
+    min-height:100vh; display:flex; flex-direction:column;
+    justify-content:flex-end; padding:0 64px 80px;
+    position:relative; overflow:hidden; padding-top:80px;
+  }
+  .hero-bg {
+    position:absolute; inset:0;
+    background-image:url('{{FOTO_HERO}}');
+    background-size:cover; background-position:center;
+    animation:hZoom 10s ease-out forwards;
+  }
+  @keyframes hZoom { from{transform:scale(1.08)} to{transform:scale(1)} }
+  .hero-overlay {
+    position:absolute; inset:0;
+    background:linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.1) 100%);
+  }
+  .hero-content { position:relative; z-index:2; max-width:1100px; animation:hFadeUp 0.9s ease-out 0.2s both; }
+  @keyframes hFadeUp { from{opacity:0;transform:translateY(28px)} to{opacity:1;transform:translateY(0)} }
+  .hero-chip {
+    display:inline-flex; align-items:center; gap:8px;
+    background:rgba(255,255,255,0.12); backdrop-filter:blur(8px);
+    border:1px solid rgba(255,255,255,0.2);
+    border-radius:100px; padding:8px 18px;
+    font-size:12px; font-weight:500; color:rgba(255,255,255,0.8);
+    letter-spacing:0.5px; margin-bottom:28px; width:fit-content;
+  }
+  .hero-chip span { width:6px; height:6px; border-radius:50%; background:var(--cor2); }
+  .hero-h1 {
+    font-family:'Syne',sans-serif; font-size:clamp(44px,7vw,96px);
+    font-weight:800; line-height:0.95; color:#fff; margin-bottom:24px;
+    letter-spacing:-2px;
+  }
+  .hero-h1 mark { background:none; color:var(--cor2); }
+  .hero-bottom { display:flex; align-items:flex-end; justify-content:space-between; flex-wrap:wrap; gap:32px; }
+  .hero-p { font-size:17px; line-height:1.8; color:rgba(255,255,255,0.65); max-width:500px; font-weight:300; }
+  .hero-btns { display:flex; gap:12px; flex-wrap:wrap; }
+  .btn-cor {
+    display:inline-flex; align-items:center; gap:10px;
+    background:var(--cor2); color:#fff;
+    padding:15px 28px; border-radius:100px;
+    font-size:14px; font-weight:600; text-decoration:none; transition:all 0.2s;
+  }
+  .btn-cor:hover { transform:scale(1.04); box-shadow:0 8px 30px rgba(0,0,0,0.3); }
+  .btn-borda-w {
+    display:inline-flex; align-items:center; gap:10px;
+    border:1.5px solid rgba(255,255,255,0.3); color:rgba(255,255,255,0.8);
+    padding:15px 28px; border-radius:100px;
+    font-size:14px; font-weight:500; text-decoration:none; transition:all 0.2s;
+  }
+  .btn-borda-w:hover { border-color:var(--cor2); color:var(--cor2); }
+
+  /* STATS */
+  #stats { background:var(--cor1); }
+  .stats-row { display:grid; grid-template-columns:repeat(4,1fr); }
+  .stat-col { padding:44px 32px; text-align:center; border-right:1px solid rgba(255,255,255,0.08); }
+  .stat-col:last-child { border:none; }
+  .stat-n { font-family:'Syne',sans-serif; font-size:44px; font-weight:800; color:#fff; line-height:1; margin-bottom:6px; }
+  .stat-l { font-size:12px; font-weight:500; color:rgba(255,255,255,0.4); letter-spacing:2px; text-transform:uppercase; }
+
+  /* SOBRE */
+  #sobre { background:var(--bg); padding:120px 64px; }
+  .sobre-inner { max-width:1100px; margin:0 auto; display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:center; }
+  .label-xs {
+    font-family:'Syne',sans-serif; font-size:11px; font-weight:700;
+    letter-spacing:4px; text-transform:uppercase; color:var(--cor2);
+    margin-bottom:16px; display:block;
+  }
+  .h2 {
+    font-family:'Syne',sans-serif; font-size:clamp(30px,4vw,52px); font-weight:800;
+    line-height:1.05; color:var(--texto); margin-bottom:20px; letter-spacing:-1px;
+  }
+  .h2 em { color:var(--cor2); font-style:normal; }
+  .body-p { font-size:16px; line-height:1.9; color:var(--suave); margin-bottom:14px; font-weight:300; }
+  .sobre-fotos { display:grid; grid-template-columns:1fr 1fr; grid-template-rows:280px 200px; gap:12px; }
+  .sobre-foto { overflow:hidden; border-radius:16px; background:#ddd; }
+  .sobre-foto:first-child { grid-row:1/3; }
+  .sobre-foto img { width:100%; height:100%; object-fit:cover; transition:transform 0.5s; }
+  .sobre-foto:hover img { transform:scale(1.05); }
+
+  /* SERVIÇOS */
+  #servicos { background:var(--bg2); padding:120px 64px; }
+  .servicos-inner { max-width:1100px; margin:0 auto; }
+  .servicos-header { display:grid; grid-template-columns:1fr 1fr; align-items:end; margin-bottom:60px; gap:40px; }
+  .servicos-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+  .servico-card {
+    background:#fff; padding:36px 28px; border-radius:20px;
+    border:1px solid rgba(0,0,0,0.06);
+    transition:all 0.3s; cursor:default;
+  }
+  .servico-card:hover { transform:translateY(-8px); box-shadow:0 20px 60px rgba(0,0,0,0.1); border-color:transparent; }
+  .servico-icon-wrap {
+    width:52px; height:52px; border-radius:14px;
+    background:linear-gradient(135deg, var(--cor1) 0%, var(--cor2) 100%);
+    display:flex; align-items:center; justify-content:center;
+    font-size:22px; margin-bottom:20px;
+  }
+  .servico-nome { font-family:'Syne',sans-serif; font-size:17px; font-weight:700; color:var(--texto); margin-bottom:10px; letter-spacing:-0.3px; }
+  .servico-desc { font-size:14px; line-height:1.7; color:var(--suave); font-weight:300; }
+
+  /* GALERIA */
+  #galeria { background:var(--cor1); padding:120px 64px; }
+  .galeria-inner { max-width:1100px; margin:0 auto; }
+  .galeria-header { display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:48px; }
+  .galeria-header .label-xs { color:rgba(255,255,255,0.4); }
+  .galeria-header .h2 { color:#fff; margin-bottom:0; }
+  .galeria-grid {
+    display:grid; grid-template-columns:repeat(3,1fr);
+    grid-template-rows:260px 200px; gap:12px;
+  }
+  .galeria-item { overflow:hidden; border-radius:16px; background:#1a1a1a; }
+  .galeria-item:first-child { grid-row:1/3; grid-column:1/2; }
+  .galeria-item img { width:100%; height:100%; object-fit:cover; transition:transform 0.6s, filter 0.3s; filter:brightness(0.9); }
+  .galeria-item:hover img { transform:scale(1.07); filter:brightness(1.05); }
+
+  /* DEPOIMENTOS */
+  #depoimentos { background:var(--bg); padding:120px 64px; }
+  .depo-inner { max-width:1100px; margin:0 auto; }
+  .depo-header { text-align:center; margin-bottom:60px; }
+  .depo-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:24px; }
+  .depo-card {
+    background:var(--bg2); padding:36px; border-radius:20px;
+    border:1px solid rgba(0,0,0,0.04); transition:all 0.3s; position:relative;
+  }
+  .depo-card:hover { transform:translateY(-6px); box-shadow:0 20px 50px rgba(0,0,0,0.08); }
+  .depo-stars { color:var(--cor2); font-size:14px; letter-spacing:2px; margin-bottom:18px; }
+  .depo-text { font-size:15px; line-height:1.8; color:var(--suave); font-style:italic; margin-bottom:20px; }
+  .depo-autor { font-family:'Syne',sans-serif; font-size:14px; font-weight:700; color:var(--texto); }
+  .depo-quote {
+    position:absolute; top:20px; right:24px;
+    font-family:'Syne',sans-serif; font-size:72px; font-weight:800;
+    color:var(--cor2); opacity:0.1; line-height:1;
+  }
+
+  /* HORÁRIOS */
+  #horarios { background:var(--bg2); padding:100px 64px; }
+  .horarios-inner { max-width:1100px; margin:0 auto; display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:start; }
+  .horario-lista { margin-top:32px; }
+  .horario-item { display:flex; justify-content:space-between; padding:16px 0; border-bottom:1px solid rgba(0,0,0,0.06); }
+  .horario-dia { font-size:14px; color:var(--suave); }
+  .horario-hora { font-size:14px; font-weight:600; color:var(--cor1); font-family:'Syne',sans-serif; }
+  .horario-hora.fechado { color:#ccc; font-weight:400; }
+
+  /* MAPA */
+  #localizacao { background:var(--cor1); }
+  .mapa-inner { display:grid; grid-template-columns:1fr 1.3fr; min-height:500px; }
+  .mapa-info { padding:80px 64px; display:flex; flex-direction:column; justify-content:center; }
+  .mapa-info .label-xs { color:rgba(255,255,255,0.4); }
+  .mapa-info .h2 { color:#fff; }
+  .mapa-detalhe { display:flex; align-items:flex-start; gap:16px; margin-bottom:24px; }
+  .mapa-icon { width:44px; height:44px; border-radius:12px; background:rgba(255,255,255,0.1); display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; }
+  .mapa-detalhe p { font-size:11px; color:rgba(255,255,255,0.4); letter-spacing:2px; text-transform:uppercase; margin-bottom:4px; }
+  .mapa-detalhe strong { font-size:15px; color:rgba(255,255,255,0.85); font-weight:300; }
+  .mapa-btns { display:flex; gap:12px; margin-top:36px; flex-wrap:wrap; }
+  .btn-branco { display:inline-flex; align-items:center; gap:10px; background:#fff; color:var(--cor1); padding:14px 26px; border-radius:100px; font-size:14px; font-weight:600; text-decoration:none; transition:all 0.2s; }
+  .btn-branco:hover { background:var(--cor2); color:#fff; transform:scale(1.03); }
+  .btn-borda-branco { display:inline-flex; align-items:center; gap:10px; border:1.5px solid rgba(255,255,255,0.25); color:rgba(255,255,255,0.7); padding:14px 26px; border-radius:100px; font-size:14px; font-weight:500; text-decoration:none; transition:all 0.2s; }
+  .btn-borda-branco:hover { border-color:rgba(255,255,255,0.7); color:#fff; }
+  .mapa-embed { width:100%; height:100%; min-height:500px; border:none; }
+
+  /* CTA */
+  #cta {
+    padding:120px 64px; text-align:center; background:var(--bg);
+    position:relative; overflow:hidden;
+  }
+  .cta-blob {
+    position:absolute; width:600px; height:600px; border-radius:50%;
+    background:radial-gradient(circle, var(--cor2) 0%, transparent 70%);
+    opacity:0.08; top:50%; left:50%; transform:translate(-50%,-50%);
+  }
+  .cta-h2 { font-family:'Syne',sans-serif; font-size:clamp(36px,5.5vw,72px); font-weight:800; color:var(--texto); margin-bottom:16px; letter-spacing:-2px; position:relative; }
+  .cta-h2 em { color:var(--cor2); font-style:normal; }
+  .cta-p { font-size:17px; color:var(--suave); margin-bottom:40px; max-width:480px; margin-left:auto; margin-right:auto; font-weight:300; position:relative; }
+
+  /* FOOTER */
+  footer { background:var(--cor1); padding:52px 64px; display:flex; align-items:center; justify-content:space-between; }
+  .footer-logo { font-family:'Syne',sans-serif; font-size:18px; font-weight:800; color:var(--cor2); letter-spacing:-0.5px; }
+  .footer-copy { font-size:12px; color:rgba(255,255,255,0.2); }
+  .footer-links { display:flex; gap:28px; list-style:none; }
+  .footer-links a { font-size:12px; color:rgba(255,255,255,0.3); text-decoration:none; transition:color 0.2s; font-weight:500; }
+  .footer-links a:hover { color:var(--cor2); }
+
+  .demo-badge { position:fixed; bottom:24px; right:24px; background:var(--cor2); color:#fff; padding:12px 20px; border-radius:100px; font-size:12px; font-weight:600; z-index:999; cursor:pointer; box-shadow:0 8px 30px rgba(0,0,0,0.2); transition:transform 0.2s; }
+  .demo-badge:hover { transform:scale(1.05); }
+
+  @media (max-width:900px) {
+    nav { padding:16px 24px; }
+    .nav-links { display:none; }
+    #hero { padding:80px 24px 60px; }
+    #stats .stats-row { grid-template-columns:1fr 1fr; }
+    #sobre,#servicos,#galeria,#depoimentos,#horarios { padding:80px 24px; }
+    .sobre-inner,.horarios-inner { grid-template-columns:1fr; gap:40px; }
+    .servicos-header { grid-template-columns:1fr; }
+    .servicos-grid,.depo-grid { grid-template-columns:1fr; }
+    .galeria-grid { grid-template-columns:1fr 1fr; grid-template-rows:auto; }
+    .galeria-item:first-child { grid-column:auto; grid-row:auto; height:250px; }
+    .galeria-item { height:200px; }
+    .mapa-inner { grid-template-columns:1fr; }
+    .mapa-info { padding:60px 24px; }
+    #cta { padding:80px 24px; }
+    footer { padding:40px 24px; flex-direction:column; gap:20px; text-align:center; }
+  }
+</style>
+</head>
+<body>
+<nav id="navbar">
+  <a href="#hero" class="nav-logo">{{NOME}}</a>
+  <ul class="nav-links">
+    <li><a href="#sobre">Sobre</a></li>
+    <li><a href="#servicos">Serviços</a></li>
+    <li><a href="#galeria">Galeria</a></li>
+    <li><a href="#depoimentos">Avaliações</a></li>
+    <li><a href="#localizacao">Contato</a></li>
+    <li><a href="{{WHATSAPP_LINK}}" target="_blank" class="nav-cta">WhatsApp</a></li>
+  </ul>
+</nav>
+
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-chip"><span></span>{{SEGMENTO}} · {{CIDADE}}, {{ESTADO}}</div>
+    <h1 class="hero-h1">{{NOME}}</h1>
+    <div class="hero-bottom">
+      <p class="hero-p">{{SERVICOS}} — qualidade e dedicação em cada atendimento.</p>
+      <div class="hero-btns">
+        <a href="{{WHATSAPP_LINK}}" target="_blank" class="btn-cor">💬 WhatsApp</a>
+        <a href="#sobre" class="btn-borda-w">Saiba mais</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="stats">
+  <div class="stats-row">
+    <div class="stat-col"><div class="stat-n">500+</div><div class="stat-l">Clientes</div></div>
+    <div class="stat-col"><div class="stat-n">5★</div><div class="stat-l">Avaliação</div></div>
+    <div class="stat-col"><div class="stat-n">100%</div><div class="stat-l">Satisfação</div></div>
+    <div class="stat-col"><div class="stat-n">{{CIDADE}}</div><div class="stat-l">Referência</div></div>
+  </div>
+</section>
+
+<section id="sobre">
+  <div class="sobre-inner">
+    <div>
+      <span class="label-xs">Sobre Nós</span>
+      <h2 class="h2">Referência em<br><em>{{SEGMENTO}}</em><br>em {{CIDADE}}</h2>
+      <p class="body-p">{{NOME}} é reconhecida pela excelência no atendimento e pela qualidade dos serviços em {{CIDADE}}, {{ESTADO}}.</p>
+      <p class="body-p">Oferecemos {{SERVICOS}} com profissionais dedicados e comprometidos com sua satisfação.</p>
+      <a href="{{WHATSAPP_LINK}}" target="_blank" class="btn-cor" style="margin-top:28px;">💬 Falar conosco</a>
+    </div>
+    <div class="sobre-fotos">
+      <div class="sobre-foto"><img src="{{FOTO_2}}" alt="{{NOME}}"></div>
+      <div class="sobre-foto"><img src="{{FOTO_3}}" alt="{{NOME}}"></div>
+      <div class="sobre-foto"><img src="{{FOTO_HERO}}" alt="{{NOME}}"></div>
+    </div>
+  </div>
+</section>
+
+<section id="servicos">
+  <div class="servicos-inner">
+    <div class="servicos-header">
+      <div><span class="label-xs">O Que Fazemos</span><h2 class="h2">Nossos <em>Serviços</em></h2></div>
+      <p class="body-p">Tudo o que você precisa em um só lugar, com qualidade e atendimento diferenciado.</p>
+    </div>
+    <div class="servicos-grid" id="servicos-grid"></div>
+  </div>
+</section>
+
+<section id="galeria">
+  <div class="galeria-inner">
+    <div class="galeria-header">
+      <div><span class="label-xs">Nosso Espaço</span><h2 class="h2" style="color:#fff;">Galeria</h2></div>
+      <a href="{{WHATSAPP_LINK}}" target="_blank" class="btn-branco">Agendar visita</a>
+    </div>
+    <div class="galeria-grid">
+      <div class="galeria-item"><img src="{{FOTO_HERO}}" alt="{{NOME}}"></div>
+      <div class="galeria-item"><img src="{{FOTO_2}}" alt="{{NOME}}"></div>
+      <div class="galeria-item"><img src="{{FOTO_3}}" alt="{{NOME}}"></div>
+      <div class="galeria-item"><img src="{{FOTO_2}}" alt="{{NOME}}"></div>
+      <div class="galeria-item"><img src="{{FOTO_3}}" alt="{{NOME}}"></div>
+    </div>
+  </div>
+</section>
+
+<section id="depoimentos">
+  <div class="depo-inner">
+    <div class="depo-header"><span class="label-xs">Avaliações</span><h2 class="h2">O que nossos <em>clientes</em> dizem</h2></div>
+    <div class="depo-grid">
+      <div class="depo-card"><div class="depo-quote">"</div><div class="depo-stars">★★★★★</div><p class="depo-text">"Atendimento excepcional! Profissionais dedicados e ambiente acolhedor. Melhor escolha que fiz em {{CIDADE}}."</p><div class="depo-autor">Ana C.</div></div>
+      <div class="depo-card"><div class="depo-quote">"</div><div class="depo-stars">★★★★★</div><p class="depo-text">"Qualidade impecável e resultado sempre acima do esperado. Recomendo sem hesitar para todo mundo!"</p><div class="depo-autor">Pedro M.</div></div>
+      <div class="depo-card"><div class="depo-quote">"</div><div class="depo-stars">★★★★★</div><p class="depo-text">"Lugar incrível, equipe fantástica e preço justo. Com certeza é referência em {{SEGMENTO}} em {{CIDADE}}!"</p><div class="depo-autor">Lucia R.</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="horarios">
+  <div class="horarios-inner">
+    <div>
+      <span class="label-xs">Quando Atendemos</span>
+      <h2 class="h2">Horário de<br><em>Funcionamento</em></h2>
+      <p class="body-p">{{HORARIO}}</p>
+      <a href="{{WHATSAPP_LINK}}" target="_blank" class="btn-cor" style="margin-top:28px;">💬 Agendar pelo WhatsApp</a>
+    </div>
+    <div class="horario-lista">
+      <div class="horario-item"><span class="horario-dia">Segunda-feira</span><span class="horario-hora">09:00 – 18:00</span></div>
+      <div class="horario-item"><span class="horario-dia">Terça-feira</span><span class="horario-hora">09:00 – 18:00</span></div>
+      <div class="horario-item"><span class="horario-dia">Quarta-feira</span><span class="horario-hora">09:00 – 18:00</span></div>
+      <div class="horario-item"><span class="horario-dia">Quinta-feira</span><span class="horario-hora">09:00 – 18:00</span></div>
+      <div class="horario-item"><span class="horario-dia">Sexta-feira</span><span class="horario-hora">09:00 – 18:00</span></div>
+      <div class="horario-item"><span class="horario-dia">Sábado</span><span class="horario-hora">09:00 – 13:00</span></div>
+      <div class="horario-item"><span class="horario-dia">Domingo</span><span class="horario-hora fechado">Fechado</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="localizacao">
+  <div class="mapa-inner">
+    <div class="mapa-info">
+      <span class="label-xs">Localização</span>
+      <h2 class="h2">Onde <em style="color:var(--cor2)">Estamos</em></h2>
+      <div class="mapa-detalhe"><div class="mapa-icon">📍</div><div><p>Endereço</p><strong>{{ENDERECO}}</strong></div></div>
+      <div class="mapa-detalhe"><div class="mapa-icon">📞</div><div><p>Telefone</p><strong>{{TELEFONE}}</strong></div></div>
+      <div class="mapa-detalhe"><div class="mapa-icon">⏰</div><div><p>Horário</p><strong>{{HORARIO}}</strong></div></div>
+      <div class="mapa-btns">
+        <a href="{{WHATSAPP_LINK}}" target="_blank" class="btn-branco">💬 WhatsApp</a>
+        <a href="https://www.google.com/maps/search/?api=1&query={{ENDERECO}}" target="_blank" class="btn-borda-branco">🗺 Ver Mapa</a>
+      </div>
+    </div>
+    <iframe class="mapa-embed" src="https://www.google.com/maps/embed/v1/place?key=AIzaSyD-9tSrke72PouQMnMX-a7eZSW0jkFMBWY&q={{ENDERECO}}" allowfullscreen loading="lazy"></iframe>
+  </div>
+</section>
+
+<section id="cta">
+  <div class="cta-blob"></div>
+  <h2 class="cta-h2">Pronto para<br><em>começar?</em></h2>
+  <p class="cta-p">Entre em contato pelo WhatsApp e agende seu horário agora mesmo!</p>
+  <a href="{{WHATSAPP_LINK}}" target="_blank" class="btn-cor" style="font-size:15px;padding:17px 36px;">💬 Falar com {{NOME}}</a>
+</section>
+
+<footer>
+  <div class="footer-logo">{{NOME}}</div>
+  <p class="footer-copy">© 2025 {{NOME}} · {{CIDADE}}, {{ESTADO}}</p>
+  <ul class="footer-links">
+    <li><a href="{{WHATSAPP_LINK}}" target="_blank">WhatsApp</a></li>
+    <li><a href="tel:{{TELEFONE}}">Ligar</a></li>
+  </ul>
+</footer>
+
+<div class="demo-badge" onclick="alert('Site demo criado para {{NOME}}. Entre em contato para ter o seu site!')">✨ Site Demo</div>
+
+<script>
+  window.addEventListener('scroll', () => {
+    document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 60);
+  });
+  const servicosRaw = '{{SERVICOS}}';
+  const lista = servicosRaw.split(',').map(s => s.trim()).filter(Boolean);
+  const icones = ['⭐','✅','🎯','💡','🔧','🌟','💎','🚀'];
+  const descs = ['Atendimento profissional com qualidade garantida','Serviço realizado por especialistas dedicados','Resultado excepcional em cada atendimento','Solução completa para suas necessidades','Experiência e comprometimento em cada detalhe','Satisfação garantida ou devolvemos seu dinheiro'];
+  const grid = document.getElementById('servicos-grid');
+  lista.slice(0,6).forEach((s,i) => {
+    grid.innerHTML += `<div class="servico-card"><div class="servico-icon-wrap">${icones[i%icones.length]}</div><div class="servico-nome">${s}</div><div class="servico-desc">${descs[i%descs.length]}</div></div>`;
+  });
+  if (!lista.length) grid.innerHTML = '<div class="servico-card"><div class="servico-icon-wrap">⭐</div><div class="servico-nome">Atendimento</div><div class="servico-desc">Serviço de qualidade</div></div><div class="servico-card"><div class="servico-icon-wrap">✅</div><div class="servico-nome">Qualidade</div><div class="servico-desc">Profissionais dedicados</div></div><div class="servico-card"><div class="servico-icon-wrap">🎯</div><div class="servico-nome">Resultado</div><div class="servico-desc">Satisfação garantida</div></div>';
+  const observer = new IntersectionObserver(e => e.forEach(x => { if(x.isIntersecting){x.target.style.opacity='1';x.target.style.transform='translateY(0)';} }),{threshold:0.1});
+  document.querySelectorAll('.servico-card,.depo-card,.stat-col').forEach(el => { el.style.opacity='0'; el.style.transform='translateY(20px)'; el.style.transition='opacity 0.5s ease, transform 0.5s ease'; observer.observe(el); });
+</script>
+</body>
+</html>
